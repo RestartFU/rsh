@@ -1,0 +1,22 @@
+# This is a comment
+variable maintainer = "The one and only RestartFU"
+
+function install {
+    download "https://github.com/RestartFU/dyn/releases/latest/download/dyn" to "dyn.bin"
+    sh "chmod +x dyn.bin"
+
+    # use the remove function to delete the previous binary.
+    internal remove
+
+    move "dyn.bin" to "/usr/bin/dyn"
+    sh "echo updated dyn to $(dyn version)"
+}
+
+function update {
+    # use the install function.
+    internal install
+}
+
+function remove {
+    delete "/usr/bin/dyn"
+}
