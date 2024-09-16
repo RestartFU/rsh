@@ -11,7 +11,10 @@ pub fn (s Script) variable(identifier string) string {
 }
 
 pub fn (s Script) run(function string) {
-	for act in s.functions[function].actions {
+	func := s.functions[function] or {
+		panic("no function found")
+	}
+	for act in func.actions {
 		act()
 	}
 }

@@ -1,5 +1,7 @@
 module rsh
 
+import os
+
 struct Position {
 mut:
 	offset int
@@ -41,7 +43,22 @@ fn (mut t Tokenizer) next() rune {
 		t.cursor=0
 	}
 	return r
+}
 
+fn (mut t Tokenizer) previous() rune {
+	t.offset--
+	t.cursor--
+
+	dat := t.data[t.offset..]
+	if t.offset > t.data.len  || dat.len <= 0 {
+		return 0
+	}
+
+	r := dat[0]
+	if r == `\n` {
+		t.line--
+	}
+	return r
 }
 
 fn (mut t Tokenizer) skip_white_space() {
@@ -62,6 +79,20 @@ fn (mut t Tokenizer) token() Token {
 		0 {
 			tok.kind = tok_eof
 			return tok
+		}
+		`$` {
+			t.r = t.next()
+			if t.r == `(` {
+				tok.kind = tok_string
+				for t.offset < t.data.len {
+					t.r = t.next()
+					if t.r == `)` {
+						break
+					}
+					tok.text += t.r.str()
+				}
+				tok.text = os.raw_execute(tok.text).output.trim_space()
+			}
 		}
 		`#` {
 			tok.kind = tok_comment
@@ -89,11 +120,31 @@ fn (mut t Tokenizer) token() Token {
 		`"` {
 			tok.kind = tok_string
 			for t.offset < t.data.len {
-				curr := t.next()
-				if curr == `"` {
-					break
+				t.r = t.next()
+				match t.r {
+					`$` {
+						t.r = t.next()
+						if t.r == `(` {
+							mut shcmd := ""
+							for t.offset < t.data.len {
+								if t.r == `)` {
+									tok.text += os.raw_execute(shcmd[1..]).output.trim_space()
+									t.r = t.next()
+									break
+								}
+								shcmd += t.r.str()
+								t.r = t.next()
+							}
+						} else {
+							tok.text += "$"
+						}
+					}
+					`"` {
+						break
+					}
+					else {}
 				}
-				tok.text += curr.str()
+				tok.text += t.r.str()
 			}
 		}
 		else {

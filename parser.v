@@ -9,12 +9,20 @@ mut:
 	result Script
 }
 
-fn (mut p Parser) expect(kind TokenKind) Token{
-	tok := p.tokenizer.token()
+fn (mut p Parser) expect(kind TokenKind) Token {
+	mut tok := p.tokenizer.token()
 	if tok.kind != kind {
 		println("${p.filename}: ${p.tokenizer.line}:${p.tokenizer.cursor}: expected token kind '${kind.identifier}' but got '${tok.kind.identifier}' instead")
 		exit(0)
 	}
+	if tok.kind == tok_string {
+		for id, v in p.result.variables {
+			println(tok.text)
+			tok.text = tok.text.replace("$" + "{" + id + "}", v)
+			println(tok.text)
+		}
+	}
+
 	return tok
 }
 
