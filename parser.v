@@ -27,10 +27,8 @@ fn (mut p Parser) parse_function() {
 	identifier := p.expect(tok_identifier).text
 	p.result.functions[identifier] = Function{}
 
-	p.expect(tok_left_bracket)
-
 	mut tok := p.tokenizer.token()
-	for tok.kind != tok_right_bracket {
+	for tok.kind != tok_end {
 		line := tok.line
 		match tok.text {
 			"unzip" {
@@ -108,7 +106,7 @@ pub fn parse_script(filename string) Script {
 			tok_variable {
 				parser.parse_variable()
 			}
-			tok_function {
+			tok_def {
 				parser.parse_function()
 			}
 			tok_require {

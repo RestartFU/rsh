@@ -6,7 +6,8 @@ const (
 	tok_string = TokenKind{identifier: "string"}
 	tok_variable = TokenKind{identifier: "variable"}
 	tok_to = TokenKind{identifier: "to"}
-	tok_function = TokenKind{identifier: "function"}
+	tok_def = TokenKind{identifier: "def"}
+	tok_end = TokenKind{identifier: "end"}
 	tok_comment = TokenKind{identifier: "comment"}
 	tok_identifier = TokenKind{identifier: "identifier"}
 	tok_equals = TokenKind{identifier: "equals"}

@@ -1,7 +1,7 @@
 # This is a comment
 variable maintainer = "The one and only RestartFU"
 
-function install {
+def install
     download "https://github.com/RestartFU/dyn/releases/latest/download/dyn" to "dyn.bin"
     sh "chmod +x dyn.bin"
 
@@ -10,13 +10,13 @@ function install {
 
     move "dyn.bin" to "/usr/bin/dyn"
     sh "echo updated dyn to $(dyn version)"
-}
+end
 
-function update {
+def update
     # use the install function.
     internal install
-}
+end
 
-function remove {
+def remove
     delete "/usr/bin/dyn"
-}
+end

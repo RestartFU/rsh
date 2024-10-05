@@ -166,11 +166,14 @@ fn (mut t Tokenizer) token() Token {
 					"variable"{
 						tok.kind = tok_variable
 					}
-					"function" {
-						tok.kind = tok_function
+					"def" {
+						tok.kind = tok_def
 					}
 					"require" {
 						tok.kind = tok_require
+					}
+					"end" {
+						tok.kind = tok_end
 					}
 					else {
 						should_break = false
